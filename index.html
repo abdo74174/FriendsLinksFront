@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Profile | Connect & Share</title>
+    <meta name="description" content="A simple directory for friends to share their profiles.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons for icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav-flex">
+            <a href="index.html" class="logo">
+                Friends<span style="color: var(--accent)">Book</span>
+            </a>
+            <a href="manage.html" class="btn btn-primary">
+                <ion-icon name="add-circle-outline"></ion-icon> Add/Edit Profile
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero fade-in">
+            <div class="container">
+                <h1>Discover Your Friends</h1>
+                <p>A unified place to find CVs, Social Links, and Portfolios.</p>
+                <div style="max-width: 400px; margin: 0 auto; position: relative;">
+                    <ion-icon name="search-outline"
+                        style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary)"></ion-icon>
+                    <input type="text" id="searchInput" class="form-control" style="padding-left: 2.5rem;"
+                        placeholder="Search by name or email...">
+                </div>
+            </div>
+        </section>
+
+        <section class="profiles-section container">
+            <div id="grid" class="grid">
+                <!-- Javascript will populate this -->
+            </div>
+            <div id="noResults"
+                style="text-align: center; color: var(--text-secondary); display: none; margin-top: 2rem;">
+                <p>No profiles found. match your search.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="text-align: center; padding: 2rem; color: var(--text-secondary); border-top: 1px solid var(--border);">
+        <p>&copy; 2025 FriendsBook. Simple & Secure.</p>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

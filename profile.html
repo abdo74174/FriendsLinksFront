@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile | FriendsBook</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav-flex">
+            <a href="index.html" class="logo">
+                Friends<span style="color: var(--accent)">Book</span>
+            </a>
+            <a href="index.html" class="btn btn-outline">
+                <ion-icon name="arrow-back-outline"></ion-icon> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container fade-in"
+        style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+
+        <div class="profile-card" style="width: 100%; max-width: 600px; padding: 4rem;">
+            <div class="avatar" id="avatarLetter">?</div>
+            <h1 id="profileName" class="profile-name" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Loading...</h1>
+            <p id="profileEmail" style="color: var(--accent); margin-bottom: 2rem;">...</p>
+
+            <div class="profile-actions"
+                style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; width: 100%;">
+                <a id="linkedinLink" href="#" target="_blank" class="btn btn-outline" style="min-width: 160px;">
+                    <ion-icon name="logo-linkedin"></ion-icon> LinkedIn
+                </a>
+                <a id="githubLink" href="#" target="_blank" class="btn btn-outline" style="min-width: 160px;">
+                    <ion-icon name="logo-github"></ion-icon> GitHub
+                </a>
+                <a id="facebookLink" href="#" target="_blank" class="btn btn-outline" style="min-width: 160px;">
+                    <ion-icon name="logo-facebook"></ion-icon> Facebook
+                </a>
+                <a id="portfolioLink" href="#" target="_blank" class="btn btn-outline" style="min-width: 160px;">
+                    <ion-icon name="globe-outline"></ion-icon> Portfolio
+                </a>
+                <a id="cvLink" href="#" download class="btn btn-primary" style="min-width: 160px; width: 100%;">
+                    <ion-icon name="document-text-outline"></ion-icon> Download CV
+                </a>
+            </div>
+
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); width: 100%;">
+                <a href="manage.html" class="btn btn-outline" style="font-size: 0.875rem;">
+                    <ion-icon name="create-outline"></ion-icon> Is this you? Edit Profile
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const email = params.get('email');
+
+            if (!email) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const profile = await DataService.getProfile(email);
+            if (!profile) {
+                document.querySelector('main').innerHTML = `<h1 style="text-align:center;">Profile not found</h1>`;
+                return;
+            }
+
+            document.title = `${profile.name} | FriendsBook`;
+            document.getElementById('profileName').textContent = profile.name;
+            // Hide Email or limit visibility
+            document.getElementById('profileEmail').style.display = 'none';
+            document.getElementById('avatarLetter').textContent = profile.name.charAt(0).toUpperCase();
+
+            document.getElementById('linkedinLink').href = profile.linkedin;
+            document.getElementById('githubLink').href = profile.github;
+
+            const fbLink = document.getElementById('facebookLink');
+            if (profile.facebook) fbLink.href = profile.facebook;
+            else fbLink.style.display = 'none';
+
+            const portLink = document.getElementById('portfolioLink');
+            if (profile.portfolio) portLink.href = profile.portfolio;
+            else portLink.style.display = 'none';
+
+            if (profile.cvBase64) {
+                document.getElementById('cvLink').href = profile.cvBase64;
+                document.getElementById('cvLink').download = `${profile.name.replace(' ', '_')}_CV.pdf`;
+            } else {
+                document.getElementById('cvLink').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

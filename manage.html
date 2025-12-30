@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Profile | FriendsBook</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav-flex">
+            <a href="index.html" class="logo">
+                Friends<span style="color: var(--accent)">Book</span>
+            </a>
+            <a href="index.html" class="btn btn-outline">
+                <ion-icon name="arrow-back-outline"></ion-icon> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container fade-in">
+
+        <!-- Step 1: Email Entry -->
+        <div id="emailStep" class="form-container">
+            <h2 style="margin-bottom: 1rem;">Get Started</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Enter your Gmail address to create or edit
+                your profile.</p>
+
+            <form id="checkEmailForm">
+                <div class="form-group">
+                    <label>Gmail Address</label>
+                    <input type="email" id="emailInput" class="form-control" placeholder="john.doe@gmail.com" required
+                        pattern=".+@gmail\.com">
+                    <small style="color: var(--text-secondary)">Only @gmail.com addresses are allowed.</small>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">
+                    Continue <ion-icon name="arrow-forward-outline"></ion-icon>
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Edit Profile -->
+        <div id="profileStep" class="form-container" style="display: none; max-width: 600px;">
+            <h2 id="formTitle" style="margin-bottom: 1rem;">Edit Profile</h2>
+            <p id="formSubtitle" style="color: var(--text-secondary); margin-bottom: 2rem;"></p>
+
+            <form id="profileForm">
+                <input type="hidden" id="currentEmail">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="nameInput" class="form-control" placeholder="e.g. John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label>LinkedIn URL</label>
+                    <input type="url" id="linkedinInput" class="form-control" placeholder="https://linkedin.com/in/..."
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>GitHub URL</label>
+                    <input type="url" id="githubInput" class="form-control" placeholder="https://github.com/..."
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Facebook URL</label>
+                    <input type="url" id="facebookInput" class="form-control" placeholder="https://facebook.com/...">
+                </div>
+
+                <div class="form-group">
+                    <label>Portfolio URL</label>
+                    <input type="url" id="portfolioInput" class="form-control" placeholder="https://myportfolio.com">
+                </div>
+
+                <!-- CV Upload Simulation -->
+                <div class="form-group">
+                    <label>CV / Resume (PDF)</label>
+                    <div class="file-upload" id="dropZone">
+                        <ion-icon name="cloud-upload-outline"
+                            style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></ion-icon>
+                        <p id="fileLabel">Click to upload or drag and drop</p>
+                        <input type="file" id="cvInput" accept=".pdf" style="display: none;">
+                        <input type="hidden" id="cvData"> <!-- storing base64 for demo -->
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="cancelBtn" class="btn btn-outline" style="flex: 1">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1">Save Profile</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/manage.js"></script>
+</body>
+
+</html>
