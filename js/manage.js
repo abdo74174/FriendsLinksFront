@@ -1,10 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // State
+    let parsingMode = 'file';
+
     // Elements
     const step1 = document.getElementById('emailStep');
     const step2 = document.getElementById('profileStep');
     const checkEmailForm = document.getElementById('checkEmailForm');
     const profileForm = document.getElementById('profileForm');
     const emailInput = document.getElementById('emailInput');
+
+    // CV Parsing Elements
+    const cvTextPaste = document.getElementById('cvTextPaste');
+    const tabUpload = document.getElementById('tabUpload');
+    const tabPaste = document.getElementById('tabPaste');
+    const fileParsingArea = document.getElementById('fileParsingArea');
+    const textParsingArea = document.getElementById('textParsingArea');
+    const parseCvBtn = document.getElementById('parseCvBtn');
+    const parseLoading = document.getElementById('parseLoading');
 
     // Form Elements
     const currentEmailInput = document.getElementById('currentEmail');
@@ -16,23 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const cvInput = document.getElementById('cvInput');
     const cvDataInput = document.getElementById('cvData');
 
-    // New Fields
+    // New Detail Fields
     const phoneInput = document.getElementById('phoneInput');
     const experienceInput = document.getElementById('experienceInput');
     const educationInput = document.getElementById('educationInput');
     const skillsInput = document.getElementById('skillsInput');
     const certificationsInput = document.getElementById('certificationsInput');
     const languagesInput = document.getElementById('languagesInput');
-    const parseCvBtn = document.getElementById('parseCvBtn');
-    const parseLoading = document.getElementById('parseLoading');
-
-    // Restore missing elements and state
-    const cvTextPaste = document.getElementById('cvTextPaste');
-    const tabUpload = document.getElementById('tabUpload');
-    const tabPaste = document.getElementById('tabPaste');
-    const fileParsingArea = document.getElementById('fileParsingArea');
-    const textParsingArea = document.getElementById('textParsingArea');
-    let parsingMode = 'file';
 
     const dropZone = document.getElementById('dropZone');
     const fileLabel = document.getElementById('fileLabel');

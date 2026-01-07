@@ -36,6 +36,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         profiles.forEach(profile => {
             const card = document.createElement('div');
             card.className = 'profile-card fade-in';
+            card.style.cursor = 'pointer';
+
+            // Navigate on click (unless clicking a button/link)
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('button') && !e.target.closest('a')) {
+                    window.location.href = `profile.html?email=${encodeURIComponent(profile.email)}`;
+                }
+            });
 
             // Parse JSON fields safely
             const skills = profile.skills ? JSON.parse(profile.skills) : [];
@@ -49,29 +57,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 
                 <div class="social-links" style="margin-bottom: 1rem;">
-                    <a href="${profile.linkedin}" target="_blank" class="social-icon" title="LinkedIn">
+                    <a href="${profile.linkedin}" target="_blank" class="social-icon" title="LinkedIn" onclick="event.stopPropagation()">
                         <ion-icon name="logo-linkedin"></ion-icon>
                     </a>
-                    <a href="${profile.github}" target="_blank" class="social-icon" title="GitHub">
+                    <a href="${profile.github}" target="_blank" class="social-icon" title="GitHub" onclick="event.stopPropagation()">
                         <ion-icon name="logo-github"></ion-icon>
                     </a>
                     ${profile.facebook ? `
-                    <a href="${profile.facebook}" target="_blank" class="social-icon" title="Facebook">
+                    <a href="${profile.facebook}" target="_blank" class="social-icon" title="Facebook" onclick="event.stopPropagation()">
                         <ion-icon name="logo-facebook"></ion-icon>
                     </a>` : ''}
                 </div>
 
-                <div class="skill-tags" style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem; max-height: 50px; overflow: hidden;">
+                <div class="skill-tags" style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1.5rem; max-height: 50px; overflow: hidden;">
                     ${skills.slice(0, 3).map(skill => `<span style="background: var(--accent); color: white; border-radius: 10px; padding: 2px 8px; font-size: 0.65rem;">${skill}</span>`).join('')}
                     ${skills.length > 3 ? `<span style="background: var(--border); color: var(--text-secondary); border-radius: 10px; padding: 2px 8px; font-size: 0.65rem;">+${skills.length - 3}</span>` : ''}
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; margin-top: auto; width: 100%;">
-                    <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="flex: 1; padding: 0.5rem;">
-                        View Profile
+                    <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="flex: 1; padding: 0.6rem; border-radius: 12px; font-size: 0.8rem; justify-content: center;">
+                        <ion-icon name="person-outline"></ion-icon> View Profile
                     </a>
-                    <button class="btn btn-outline share-btn" data-email="${profile.email}" title="Share Profile" style="padding: 0.5rem;">
-                        <ion-icon name="share-social-outline"></ion-icon>
+                    <button class="btn btn-outline share-btn" data-email="${profile.email}" title="Share Profile" style="padding: 0.6rem; border-radius: 12px;">
+                        <ion-icon name="copy-outline"></ion-icon>
                     </button>
                 </div>
             `;

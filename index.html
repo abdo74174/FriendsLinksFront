@@ -34,29 +34,82 @@
                 <p>A unified place to find CVs, Social Links, and Portfolios.</p>
 
                 <div class="search-container"
-                    style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-                    <!-- Basic Search -->
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; position: relative;">
+                    <!-- Basic Search & Toggle -->
+                    <div
+                        style="display: flex; gap: 0.75rem; align-items: center; background: var(--card-bg); padding: 0.5rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow);">
                         <div style="position: relative; flex: 1;">
                             <ion-icon name="search-outline"
-                                style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary)"></ion-icon>
-                            <input type="text" id="searchInput" class="form-control" style="padding-left: 2.5rem;"
+                                style="position: absolute; left: 1rem; top: 0.75rem; color: var(--text-secondary)"></ion-icon>
+                            <input type="text" id="searchInput" class="form-control"
+                                style="padding-left: 2.75rem; border: none; background: transparent;"
                                 placeholder="Search by name, email, or keywords...">
                         </div>
-                        <button id="toggleFilters" class="btn btn-outline" style="padding: 0.75rem 1rem;"
+                        <button id="toggleFilters" class="btn btn-outline"
+                            style="padding: 0.6rem 1.2rem; border-radius: 12px; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border);"
                             title="Advanced Filters">
-                            <ion-icon name="options-outline" style="font-size: 1.25rem;"></ion-icon>
+                            <span style="font-size: 0.9rem; font-weight: 600;">Filters</span>
+                            <ion-icon name="options-outline" style="font-size: 1.2rem;"></ion-icon>
                         </button>
                     </div>
 
-                    <!-- Advanced Filters (Initially Hidden) -->
-                    <div id="filterSection" class="filters"
-                        style="display: none; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem; animation: slideDown 0.3s ease-out;">
-                        <input type="text" id="skillFilter" class="form-control" placeholder="Skills (e.g. Flutter)">
-                        <input type="text" id="educationFilter" class="form-control" placeholder="Education">
-                        <input type="text" id="languageFilter" class="form-control" placeholder="Language">
-                        <input type="number" id="experienceFilter" class="form-control" placeholder="Min Exp (Years)"
-                            min="0">
+                    <!-- Advanced Filters Dropdown Menu -->
+                    <div id="filterSection" class="filter-menu"
+                        style="display: none; position: absolute; top: 100%; right: 0; left: 0; z-index: 100; margin-top: 0.75rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); padding: 1.5rem; backdrop-filter: blur(10px); animation: slideDown 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);">
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);">
+                            <h3 style="font-size: 1rem; font-weight: 700;">Refine Search</h3>
+                            <button type="button" onclick="document.getElementById('toggleFilters').click()"
+                                style="background: transparent; border: none; cursor: pointer; color: var(--text-secondary);">
+                                <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+                            </button>
+                        </div>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">Technical
+                                    Skills</label>
+                                <div style="position: relative;">
+                                    <ion-icon name="code-slash-outline"
+                                        style="position: absolute; left: 0.75rem; top: 0.75rem; color: var(--accent);"></ion-icon>
+                                    <input type="text" id="skillFilter" class="form-control"
+                                        style="padding-left: 2.5rem;" placeholder="e.g. React, Python">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">Education</label>
+                                <div style="position: relative;">
+                                    <ion-icon name="school-outline"
+                                        style="position: absolute; left: 0.75rem; top: 0.75rem; color: var(--accent);"></ion-icon>
+                                    <input type="text" id="educationFilter" class="form-control"
+                                        style="padding-left: 2.5rem;" placeholder="e.g. Bachelor's">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">Language</label>
+                                <div style="position: relative;">
+                                    <ion-icon name="language-outline"
+                                        style="position: absolute; left: 0.75rem; top: 0.75rem; color: var(--accent);"></ion-icon>
+                                    <input type="text" id="languageFilter" class="form-control"
+                                        style="padding-left: 2.5rem;" placeholder="e.g. English">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">Work
+                                    Experience</label>
+                                <div style="position: relative;">
+                                    <ion-icon name="briefcase-outline"
+                                        style="position: absolute; left: 0.75rem; top: 0.75rem; color: var(--accent);"></ion-icon>
+                                    <input type="number" id="experienceFilter" class="form-control"
+                                        style="padding-left: 2.5rem;" placeholder="Min years" min="0">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
