@@ -26,10 +26,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const parseCvBtn = document.getElementById('parseCvBtn');
     const parseLoading = document.getElementById('parseLoading');
 
+    // Restore missing elements and state
+    const cvTextPaste = document.getElementById('cvTextPaste');
+    const tabUpload = document.getElementById('tabUpload');
+    const tabPaste = document.getElementById('tabPaste');
+    const fileParsingArea = document.getElementById('fileParsingArea');
+    const textParsingArea = document.getElementById('textParsingArea');
+    let parsingMode = 'file';
+
     const dropZone = document.getElementById('dropZone');
     const fileLabel = document.getElementById('fileLabel');
     const formTitle = document.getElementById('formTitle');
     const formSubtitle = document.getElementById('formSubtitle');
+
+    // Tab Switching Logic
+    tabUpload.addEventListener('click', () => {
+        parsingMode = 'file';
+        tabUpload.classList.add('active');
+        tabPaste.classList.remove('active');
+        fileParsingArea.style.display = 'block';
+        textParsingArea.style.display = 'none';
+        parseCvBtn.style.display = 'block';
+    });
+
+    tabPaste.addEventListener('click', () => {
+        parsingMode = 'text';
+        tabPaste.classList.add('active');
+        tabUpload.classList.remove('active');
+        textParsingArea.style.display = 'block';
+        fileParsingArea.style.display = 'none';
+        parseCvBtn.style.display = 'block';
+    });
 
     // Step 1: Check Email
     checkEmailForm.addEventListener('submit', async (e) => {

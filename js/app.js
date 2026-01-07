@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const grid = document.getElementById('grid');
     const searchInput = document.getElementById('searchInput');
+    const skillFilter = document.getElementById('skillFilter');
+    const educationFilter = document.getElementById('educationFilter');
+    const languageFilter = document.getElementById('languageFilter');
+    const experienceFilter = document.getElementById('experienceFilter');
     const noResults = document.getElementById('noResults');
 
     let allProfiles = [];
@@ -66,13 +70,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allProfiles.filter(p =>
-            p.name.toLowerCase().includes(term) ||
-            p.email.toLowerCase().includes(term)
-        );
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const skillTerm = skillFilter.value.toLowerCase();
+        const educationTerm = educationFilter.value.toLowerCase();
+        const languageTerm = languageFilter.value.toLowerCase();
+        const minExp = parseInt(experienceFilter.value) || 0;
+
+        const filtered = allProfiles.filter(p => {
+            // Basic search
+            const matchName = p.name.toLowerCase().includes(searchTerm);
+            const matchEmail = p.email.toLowerCase().includes(searchTerm);
+
+            // Skill filter
+            const skills = p.skills ? JSON.parse(p.skills).map(s => s.toLowerCase()) : [];
+            const matchSkills = skillTerm === '' || skills.some(s => s.includes(skillTerm));
+
+            // Education filter
+            const matchEdu = p.education ? p.education.toLowerCase().includes(educationTerm) : educationTerm === '';
+
+            // Language filter
+            const languages = p.languages ? JSON.parse(p.languages).map(l => l.toLowerCase()) : [];
+            const matchLang = languageTerm === '' || languages.some(l => l.includes(languageTerm));
+
+            // Experience filter
+            const matchExp = p.experienceYears >= minExp;
+
+            return (matchName || matchEmail) && matchSkills && matchEdu && matchLang && matchExp;
+        });
+
         renderProfiles(filtered);
+    }
+
+    [searchInput, skillFilter, educationFilter, languageFilter, experienceFilter].forEach(el => {
+        el.addEventListener('input', applyFilters);
     });
 
 
