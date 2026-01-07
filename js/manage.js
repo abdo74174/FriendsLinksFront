@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // State
-    let parsingMode = 'file';
+// State
+let parsingMode = 'file';
 
+document.addEventListener('DOMContentLoaded', () => {
     // Elements
     const step1 = document.getElementById('emailStep');
     const step2 = document.getElementById('profileStep');
