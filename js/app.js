@@ -6,8 +6,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const languageFilter = document.getElementById('languageFilter');
     const experienceFilter = document.getElementById('experienceFilter');
     const noResults = document.getElementById('noResults');
+    const toggleFilters = document.getElementById('toggleFilters');
+    const filterSection = document.getElementById('filterSection');
 
     let allProfiles = [];
+
+    // Filter Toggle
+    toggleFilters.addEventListener('click', () => {
+        const isHidden = filterSection.style.display === 'none';
+        filterSection.style.display = isHidden ? 'grid' : 'none';
+        toggleFilters.classList.toggle('active');
+    });
 
     async function loadProfiles() {
         allProfiles = await DataService.getAllProfiles();
