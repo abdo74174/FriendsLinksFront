@@ -79,22 +79,49 @@
                     <input type="url" id="portfolioInput" class="form-control" placeholder="https://myportfolio.com">
                 </div>
 
-                <!-- CV Upload Section with Parsing -->
-                <div class="form-group">
-                    <label>CV / Resume (PDF / TXT)</label>
-                    <div class="file-upload" id="dropZone" style="position: relative;">
-                        <ion-icon name="cloud-upload-outline"
-                            style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></ion-icon>
-                        <p id="fileLabel">Click to upload or drag and drop</p>
-                        <input type="file" id="cvInput" accept=".pdf,.txt" style="display: none;">
-                        <input type="hidden" id="cvData">
+                <!-- CV Upload / Text Parsing Section -->
+                <div class="form-group"
+                    style="background: var(--background); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 2rem;">
+                    <label style="font-weight: 700; color: var(--accent); margin-bottom: 1rem; display: block;">
+                        🚀 Auto-Fill from CV
+                    </label>
+
+                    <div class="parsing-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button type="button" id="tabUpload" class="btn btn-outline active"
+                            style="font-size: 0.8rem; padding: 0.5rem 1rem;">Upload File</button>
+                        <button type="button" id="tabPaste" class="btn btn-outline"
+                            style="font-size: 0.8rem; padding: 0.5rem 1rem;">Paste Text</button>
                     </div>
-                    <button type="button" id="parseCvBtn" class="btn btn-outline"
-                        style="width: 100%; margin-top: 0.5rem; display: none;">
-                        <ion-icon name="analytics-outline"></ion-icon> Extract Info from CV
+
+                    <!-- File Upload Tab -->
+                    <div id="fileParsingArea">
+                        <div class="file-upload" id="dropZone"
+                            style="position: relative; border-style: dashed; background: transparent;">
+                            <ion-icon name="cloud-upload-outline"
+                                style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></ion-icon>
+                            <p id="fileLabel" style="font-size: 0.9rem;">Upload PDF / TXT CV</p>
+                            <input type="file" id="cvInput" accept=".pdf,.txt" style="display: none;">
+                            <input type="hidden" id="cvData">
+                        </div>
+                    </div>
+
+                    <!-- Text Paste Tab -->
+                    <div id="textParsingArea" style="display: none;">
+                        <textarea id="cvTextPaste" class="form-control"
+                            placeholder="Paste your CV text here to extract info..." rows="5"
+                            style="font-size: 0.85rem; font-family: monospace;"></textarea>
+                    </div>
+
+                    <button type="button" id="parseCvBtn" class="btn btn-primary"
+                        style="width: 100%; margin-top: 1rem;">
+                        <ion-icon name="analytics-outline"></ion-icon> Extract Information
                     </button>
+
                     <div id="parseLoading" style="display: none; text-align: center; margin-top: 0.5rem;">
-                        <small style="color: var(--accent)">Processing CV... Please wait.</small>
+                        <div class="spinner-small"
+                            style="display: inline-block; width: 15px; height: 15px; border: 2px solid var(--border); border-top: 2px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite;">
+                        </div>
+                        <small style="color: var(--accent); margin-left: 0.5rem;">Processing CV...</small>
                     </div>
                 </div>
 

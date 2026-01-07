@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             fileLabel.textContent = `Selected: ${file.name}`;
-            parseCvBtn.style.display = 'block';
 
             // Convert to Base64 for storage
             const reader = new FileReader();
@@ -135,41 +134,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Parse CV logic
+    // Modernized Parse CV logic supporting both modes
     parseCvBtn.addEventListener('click', async () => {
-        const file = cvInput.files[0];
-        if (!file) return;
-
         parseCvBtn.disabled = true;
         parseLoading.style.display = 'block';
 
-        const formData = new FormData();
-        formData.append('file', file);
-
         try {
-            // Updated to point to our new CV Parser API on the local backend
-            const response = await fetch('http://localhost:5240/api/CvParser/parse-file', {
-                method: 'POST',
-                body: formData
-            });
+            let response;
+            if (parsingMode === 'file') {
+                const file = cvInput.files[0];
+                if (!file) {
+                    alert('Please select a file first.');
+                    return;
+                }
+                const formData = new FormData();
+                formData.append('file', file);
+                response = await fetch('http://localhost:5240/api/CvParser/parse-file', {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                const text = cvTextPaste.value.trim();
+                if (!text) {
+                    alert('Please paste some CV text first.');
+                    return;
+                }
+                response = await fetch('http://localhost:5240/api/CvParser/parse-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cvText: text, fileName: 'pasted_text.txt' })
+                });
+            }
 
             if (!response.ok) throw new Error('Parsing failed');
 
             const result = await response.json();
 
-            // Auto-fill form
+            // Auto-fill form fields
             if (result.fullName) nameInput.value = result.fullName;
             if (result.phone) phoneInput.value = result.phone;
-            if (result.experienceYears) experienceInput.value = result.experienceYears;
+            if (result.experienceYears !== undefined) experienceInput.value = result.experienceYears;
             if (result.education) educationInput.value = result.education;
-            if (result.skills) skillsInput.value = result.skills.join(', ');
-            if (result.certifications) certificationsInput.value = result.certifications.join(', ');
-            if (result.languages) languagesInput.value = result.languages.join(', ');
+            if (result.skills && result.skills.length) skillsInput.value = result.skills.join(', ');
+            if (result.certifications && result.certifications.length) certificationsInput.value = result.certifications.join(', ');
+            if (result.languages && result.languages.length) languagesInput.value = result.languages.join(', ');
 
-            alert('CV parsed successfully! Information has been auto-filled.');
+            alert('CV details extracted successfully! Please review the auto-filled fields below.');
         } catch (error) {
             console.error('Error parsing CV:', error);
-            alert('Failed to parse CV. You can still fill the fields manually.');
+            alert('Failed to extract data. You can still enter it manually.');
         } finally {
             parseCvBtn.disabled = false;
             parseLoading.style.display = 'none';
