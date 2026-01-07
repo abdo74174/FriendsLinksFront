@@ -217,25 +217,198 @@ header .container.nav-flex {
     margin: 0 auto 2.5rem;
 }
 
-.hero #searchInput {
-    width: 100%;
-    max-width: 450px;
-    padding: 1rem 1.5rem;
-    border-radius: 100px;
-    border: 2px solid transparent;
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow-soft);
-    font-size: 1rem;
-    color: var(--text-main);
-    transition: all 0.2s;
-    text-align: center;
+/* Search & Filter Container */
+.search-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    z-index: 10;
 }
 
-.hero #searchInput:focus {
+.search-bar-modern {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    background: var(--bg-secondary);
+    padding: 0.6rem 1rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-bar-modern:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+    transform: translateY(-2px);
+}
+
+.search-input-group {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-group ion-icon {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    margin-left: 0.75rem;
+    transition: color 0.3s;
+}
+
+.search-bar-modern:focus-within .search-input-group ion-icon {
+    color: var(--accent);
+}
+
+#searchInput {
+    border: none;
+    background: transparent !important;
+    padding: 0.8rem !important;
+    font-size: 1.05rem !important;
+    color: var(--text-main) !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    text-align: left !important;
+}
+
+#searchInput::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* Redesigned Filter Panel */
+.filter-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    position: absolute;
+    top: 115%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: none;
+    animation: slideDownModern 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .filter-panel {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filter-title h3 {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 800;
+}
+
+.filter-title p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+}
+
+.filter-group:hover .filter-label {
+    transform: translateX(4px);
+}
+
+.filter-icon-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-icon-input ion-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.filter-icon-input input:focus+ion-icon {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+.filter-control {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 2.75rem;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.filter-control:focus {
     outline: none;
     border-color: var(--accent);
+    background: var(--bg-secondary);
     box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
 }
+
+.btn-close-filter {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-close-filter:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    border-color: #fca5a5;
+}
+
 
 /* Card Grid */
 .grid {
@@ -482,41 +655,37 @@ header .container.nav-flex {
     visibility: visible;
 }
 
-/* Glassmorphic Filter Menu */
-@keyframes slideDown {
+/* Animations */
+@keyframes slideDownModern {
     from {
         opacity: 0;
-        transform: translateY(-10px) scale(0.98);
+        transform: translateY(-15px) scale(0.98);
+        filter: blur(10px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
+        filter: blur(0);
     }
 }
 
-.filter-menu {
-    border: 1px solid var(--border-color) !important;
-}
-
-[data-theme="dark"] .filter-menu {
-    background: rgba(30, 41, 59, 0.8) !important;
-    backdrop-filter: blur(20px) !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
-}
-
-.filter-menu .form-control {
-    background: var(--bg-primary) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-.filter-menu .form-control:focus {
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
-}
-
 #toggleFilters.active {
-    background: var(--accent) !important;
-    color: white !important;
-    border-color: var(--accent) !important;
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+@media (max-width: 768px) {
+    .filter-panel {
+        padding: 1.5rem;
+        top: 105%;
+        border-radius: 20px;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
 }

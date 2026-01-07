@@ -8,14 +8,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const noResults = document.getElementById('noResults');
     const toggleFilters = document.getElementById('toggleFilters');
     const filterSection = document.getElementById('filterSection');
+    const filterCount = document.getElementById('filterCount');
 
     let allProfiles = [];
 
     // Filter Toggle
     toggleFilters.addEventListener('click', () => {
-        const isHidden = filterSection.style.display === 'none';
-        filterSection.style.display = isHidden ? 'grid' : 'none';
+        const isHidden = window.getComputedStyle(filterSection).display === 'none';
+        filterSection.style.display = isHidden ? 'block' : 'none';
         toggleFilters.classList.toggle('active');
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (!filterSection.contains(e.target) && !toggleFilters.contains(e.target)) {
+            filterSection.style.display = 'none';
+            toggleFilters.classList.remove('active');
+        }
     });
 
     async function loadProfiles() {
@@ -116,7 +125,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             return (matchName || matchEmail) && matchSkills && matchEdu && matchLang && matchExp;
         });
 
+        updateFilterCount();
         renderProfiles(filtered);
+    }
+
+    function updateFilterCount() {
+        let count = 0;
+        if (skillFilter.value.trim()) count++;
+        if (educationFilter.value.trim()) count++;
+        if (languageFilter.value.trim()) count++;
+        if (experienceFilter.value && experienceFilter.value > 0) count++;
+
+        if (count > 0) {
+            filterCount.textContent = count;
+            filterCount.style.display = 'inline-block';
+        } else {
+            filterCount.style.display = 'none';
+        }
     }
 
     [searchInput, skillFilter, educationFilter, languageFilter, experienceFilter].forEach(el => {

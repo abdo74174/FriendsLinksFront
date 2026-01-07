@@ -202,7 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if (!response.ok) throw new Error('Parsing failed');
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error || 'Parsing failed');
+            }
 
             const result = await response.json();
 
@@ -218,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('CV details extracted successfully! Please review the auto-filled fields below.');
         } catch (error) {
             console.error('Error parsing CV:', error);
-            alert('Failed to extract data. You can still enter it manually.');
+            alert(`Failed to extract data: ${error.message}. You can still enter it manually.`);
         } finally {
             parseCvBtn.disabled = false;
             parseLoading.style.display = 'none';
