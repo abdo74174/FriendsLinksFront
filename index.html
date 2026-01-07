@@ -20,9 +20,6 @@
                 Friends<span style="color: var(--accent)">Book</span>
             </a>
             <div style="display: flex; gap: 1rem;">
-                <a href="cv-parser.html" class="btn btn-outline">
-                    <ion-icon name="document-text-outline"></ion-icon> CV Parser
-                </a>
                 <a href="manage.html" class="btn btn-primary">
                     <ion-icon name="add-circle-outline"></ion-icon> Add/Edit Profile
                 </a>
@@ -36,26 +33,11 @@
                 <h1>Discover Your Friends</h1>
                 <p>A unified place to find CVs, Social Links, and Portfolios.</p>
 
-                <div class="search-container"
-                    style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-                    <!-- Basic Search -->
-                    <div style="position: relative; width: 100%;">
-                        <ion-icon name="search-outline"
-                            style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary)"></ion-icon>
-                        <input type="text" id="searchInput" class="form-control" style="padding-left: 2.5rem;"
-                            placeholder="Search by name, email, or keywords...">
-                    </div>
-
-                    <!-- Advanced Filters -->
-                    <div class="filters"
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
-                        <input type="text" id="skillFilter" class="form-control"
-                            placeholder="Filter by Skills (e.g. Flutter)">
-                        <input type="text" id="educationFilter" class="form-control" placeholder="Filter by Education">
-                        <input type="text" id="languageFilter" class="form-control" placeholder="Filter by Language">
-                        <input type="number" id="experienceFilter" class="form-control"
-                            placeholder="Min Experience (Years)" min="0">
-                    </div>
+                <div class="search-container" style="max-width: 400px; margin: 0 auto; position: relative;">
+                    <ion-icon name="search-outline"
+                        style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary)"></ion-icon>
+                    <input type="text" id="searchInput" class="form-control" style="padding-left: 2.5rem;"
+                        placeholder="Search by name or email...">
                 </div>
             </div>
         </section>
