@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Parser | FriendsBook</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        .parser-container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .upload-section,
+        .result-section {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .upload-section h2,
+        .result-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .upload-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .upload-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-tab.active {
+            color: var(--accent);
+        }
+
+        .upload-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--background);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            padding: 1.5rem;
+            background: var(--background);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .result-value.placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .skills-list,
+        .cert-list,
+        .lang-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-tag,
+        .cert-tag,
+        .lang-tag {
+            padding: 0.375rem 0.875rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .cert-tag {
+            background: #10b981;
+        }
+
+        .lang-tag {
+            background: #f59e0b;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            display: none;
+            padding: 1rem;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            color: #c33;
+            margin-top: 1rem;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .json-output {
+            margin-top: 1.5rem;
+        }
+
+        .json-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            float: right;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container nav-flex">
+            <a href="index.html" class="logo">
+                Friends<span style="color: var(--accent)">Book</span>
+            </a>
+            <a href="index.html" class="btn btn-outline">
+                <ion-icon name="arrow-back-outline"></ion-icon> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container parser-container fade-in">
+        <h1 style="text-align: center; margin-bottom: 0.5rem;">CV Parser</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+            Extract structured information from CV files or text
+        </p>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>Upload CV</h2>
+
+            <div class="upload-tabs">
+                <button class="upload-tab active" data-tab="text">Paste Text</button>
+                <button class="upload-tab" data-tab="file">Upload File</button>
+            </div>
+
+            <!-- Text Input Tab -->
+            <div class="tab-content active" id="text-tab">
+                <textarea id="cvTextArea" placeholder="Paste CV text here...
+
+Example:
+John Smith
+Email: john.smith@example.com
+Phone: +1-234-567-8900
+
+EXPERIENCE
+Senior Software Developer (2018 - Present)
+- 5+ years of experience in software development
+- Skills: Flutter, .NET, React, SQL, Node.js
+
+EDUCATION
+Bachelor of Science in Computer Science
+University of Example, 2018
+
+CERTIFICATIONS
+- AWS Certified Developer
+- Microsoft Certified: Azure Developer
+
+LANGUAGES
+- English (Native)
+- Spanish (Fluent)"></textarea>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="parseTextBtn">
+                        <ion-icon name="analytics-outline"></ion-icon> Parse CV Text
+                    </button>
+                    <button class="btn btn-outline" id="clearTextBtn">
+                        <ion-icon name="trash-outline"></ion-icon> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- File Upload Tab -->
+            <div class="tab-content" id="file-tab">
+                <div class="file-upload-area" id="fileUploadArea">
+                    <div class="file-upload-icon">
+                        <ion-icon name="cloud-upload-outline"></ion-icon>
+                    </div>
+                    <h3>Drag & Drop CV File</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">or click to browse</p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">Supported: PDF, DOCX, TXT</p>
+                    <div class="file-name" id="fileName"></div>
+                </div>
+                <input type="file" id="cvFileInput" accept=".pdf,.docx,.doc,.txt">
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="parseFileBtn" disabled>
+                        <ion-icon name="analytics-outline"></ion-icon> Parse CV File
+                    </button>
+                    <button class="btn btn-outline" id="clearFileBtn">
+                        <ion-icon name="trash-outline"></ion-icon> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Parsing CV...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="result-section" id="resultSection" style="display: none;">
+            <h2>Parsed Results</h2>
+
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="result-label">Full Name</div>
+                    <div class="result-value" id="resultName">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Email</div>
+                    <div class="result-value" id="resultEmail">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Phone</div>
+                    <div class="result-value" id="resultPhone">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Experience</div>
+                    <div class="result-value" id="resultExperience">-</div>
+                </div>
+            </div>
+
+            <div class="result-grid" style="margin-top: 1.5rem;">
+                <div class="result-item" style="grid-column: 1 / -1;">
+                    <div class="result-label">Education</div>
+                    <div class="result-value" id="resultEducation">-</div>
+                </div>
+            </div>
+
+            <div class="result-grid" style="margin-top: 1.5rem;">
+                <div class="result-item" style="grid-column: 1 / -1;">
+                    <div class="result-label">Skills</div>
+                    <div class="skills-list" id="resultSkills"></div>
+                </div>
+            </div>
+
+            <div class="result-grid" style="margin-top: 1.5rem;">
+                <div class="result-item" style="grid-column: 1 / -1;">
+                    <div class="result-label">Certifications</div>
+                    <div class="cert-list" id="resultCertifications"></div>
+                </div>
+            </div>
+
+            <div class="result-grid" style="margin-top: 1.5rem;">
+                <div class="result-item" style="grid-column: 1 / -1;">
+                    <div class="result-label">Languages</div>
+                    <div class="lang-list" id="resultLanguages"></div>
+                </div>
+            </div>
+
+            <!-- JSON Output -->
+            <div class="json-output">
+                <button class="btn btn-outline copy-btn" id="copyJsonBtn">
+                    <ion-icon name="copy-outline"></ion-icon> Copy JSON
+                </button>
+                <h3 style="clear: both; margin-bottom: 1rem;">JSON Output</h3>
+                <pre class="json-content" id="jsonOutput"></pre>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script src="js/cvParser.js"></script>
+</body>
+
+</html>

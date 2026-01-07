@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Parser API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #6366f1;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #6366f1;
+            margin-top: 30px;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .endpoint {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-left: 4px solid #6366f1;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .post {
+            background: #10b981;
+            color: white;
+        }
+
+        .get {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .example {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #4f46e5;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 5px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .success {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .error {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 CV Parser API - Test Interface</h1>
+        <p style="color: #666;">Test the CV Parser API endpoints directly from this page</p>
+
+        <h2>API Endpoints</h2>
+
+        <!-- Endpoint 1: Parse Text -->
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span>http://localhost:5240/api/CvParser/parse-text</span>
+        </div>
+
+        <h3>1. Test Parse CV Text</h3>
+        <button onclick="testParseText()">Test Parse Text Endpoint</button>
+
+        <div class="example">
+            <strong>Request Body:</strong>
+            <pre>{
+  "cvText": "John Smith\\nEmail: john.smith@example.com\\nPhone: +1-234-567-8900...",
+  "fileName": "test_cv"
+}</pre>
+        </div>
+
+        <div id="textResult" class="result" style="display: none;"></div>
+
+        <!-- Endpoint 2: Get Example -->
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span>http://localhost:5240/api/CvParser/example</span>
+        </div>
+
+        <h3>2. Get Example Response</h3>
+        <button onclick="testGetExample()">Test Example Endpoint</button>
+
+        <div id="exampleResult" class="result" style="display: none;"></div>
+
+        <!-- Sample CV -->
+        <h2>📄 Sample CV Text</h2>
+        <p>Use this sample CV for testing:</p>
+        <pre>John Smith
+Email: john.smith@example.com
+Phone: +1-234-567-8900
+
+PROFESSIONAL SUMMARY
+Senior Software Developer with 5+ years of experience in full-stack development.
+
+TECHNICAL SKILLS
+- Frontend: Flutter, React, Angular, Vue.js
+- Backend: .NET, Node.js, Python, Django
+- Databases: SQL, PostgreSQL, MongoDB
+- Cloud: AWS, Azure, Docker, Kubernetes
+- Tools: Git, CI/CD, Agile, Scrum
+
+PROFESSIONAL EXPERIENCE
+Senior Software Developer | Tech Innovations Inc. (2018 - Present)
+- Led development of 10+ mobile applications using Flutter
+- Implemented microservices architecture using .NET Core
+- Managed team of 5 developers using Agile methodologies
+
+Junior Developer | StartUp Solutions (2016 - 2018)
+- Developed RESTful APIs using Node.js and Express
+- Created responsive web applications with React
+
+EDUCATION
+Bachelor of Science in Computer Science
+University of Technology, 2016
+GPA: 3.8/4.0
+
+CERTIFICATIONS
+- AWS Certified Developer - Associate
+- Microsoft Certified: Azure Developer Associate
+- Professional Scrum Master I (PSM I)
+
+LANGUAGES
+- English (Native)
+- Spanish (Fluent)
+- French (Intermediate)
+</pre>
+    </div>
+
+    <div class="container">
+        <h2>📋 Expected Response Format</h2>
+        <pre>{
+  "fullName": "John Smith",
+  "email": "john.smith@example.com",
+  "phone": "+1-234-567-8900",
+  "skills": [
+    "Flutter",
+    "React",
+    "Angular",
+    "Vue",
+    ".NET",
+    "Node.js",
+    "Python",
+    "Django",
+    "SQL",
+    "PostgreSQL",
+    "MongoDB",
+    "AWS",
+    "Azure",
+    "Docker",
+    "Kubernetes",
+    "Git",
+    "CI/CD",
+    "Agile",
+    "Scrum"
+  ],
+  "experienceYears": 5,
+  "education": "Bachelor of Science in Computer Science",
+  "certifications": [
+    "AWS Certified Developer - Associate",
+    "Microsoft Certified: Azure Developer Associate",
+    "Professional Scrum Master I (PSM I)"
+  ],
+  "languages": [
+    "English",
+    "Spanish",
+    "French"
+  ],
+  "cvSaved": true
+}</pre>
+    </div>
+
+    <div class="container">
+        <h2>🚀 Quick Start Guide</h2>
+        <ol>
+            <li><strong>Start the Backend:</strong>
+                <pre>cd f:\projects\DataDisplayConnection\DataDisplayConnection
+dotnet run</pre>
+            </li>
+            <li><strong>Verify Backend is Running:</strong>
+                <p>Visit: <a href="http://localhost:5240/swagger" target="_blank">http://localhost:5240/swagger</a></p>
+            </li>
+            <li><strong>Test Endpoints:</strong>
+                <p>Click the buttons above to test the API endpoints</p>
+            </li>
+            <li><strong>Use the Frontend:</strong>
+                <p>Open: <a href="cv-parser.html">cv-parser.html</a></p>
+            </li>
+        </ol>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5240/api/CvParser';
+
+        const sampleCV = `John Smith
+Email: john.smith@example.com
+Phone: +1-234-567-8900
+
+PROFESSIONAL SUMMARY
+Senior Software Developer with 5+ years of experience in full-stack development.
+
+TECHNICAL SKILLS
+- Frontend: Flutter, React, Angular, Vue.js
+- Backend: .NET, Node.js, Python, Django
+- Databases: SQL, PostgreSQL, MongoDB
+- Cloud: AWS, Azure, Docker, Kubernetes
+- Tools: Git, CI/CD, Agile, Scrum
+
+PROFESSIONAL EXPERIENCE
+Senior Software Developer | Tech Innovations Inc. (2018 - Present)
+- Led development of 10+ mobile applications using Flutter
+- Implemented microservices architecture using .NET Core
+- Managed team of 5 developers using Agile methodologies
+
+Junior Developer | StartUp Solutions (2016 - 2018)
+- Developed RESTful APIs using Node.js and Express
+- Created responsive web applications with React
+
+EDUCATION
+Bachelor of Science in Computer Science
+University of Technology, 2016
+GPA: 3.8/4.0
+
+CERTIFICATIONS
+- AWS Certified Developer - Associate
+- Microsoft Certified: Azure Developer Associate
+- Professional Scrum Master I (PSM I)
+
+LANGUAGES
+- English (Native)
+- Spanish (Fluent)
+- French (Intermediate)`;
+
+        async function testParseText() {
+            const resultDiv = document.getElementById('textResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<p>⏳ Sending request...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/parse-text`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cvText: sampleCV,
+                        fileName: 'test_cv'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <h3>✅ Success!</h3>
+                    <p><strong>Parsed CV Data:</strong></p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                    <p style="font-size: 14px; color: #666;">
+                        Make sure the backend is running on <code>http://localhost:5240</code>
+                        <br>Run: <code>dotnet run</code> in the DataDisplayConnection project
+                    </p>
+                `;
+            }
+        }
+
+        async function testGetExample() {
+            const resultDiv = document.getElementById('exampleResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<p>⏳ Fetching example...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/example`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <h3>✅ Success!</h3>
+                    <p><strong>Example Response:</strong></p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                    <p style="font-size: 14px; color: #666;">
+                        Make sure the backend is running on <code>http://localhost:5240</code>
+                        <br>Run: <code>dotnet run</code> in the DataDisplayConnection project
+                    </p>
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>
