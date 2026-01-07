@@ -112,8 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFileSelect() {
         const file = cvInput.files[0];
         if (file) {
-            if (file.type !== 'application/pdf' && file.type !== 'text/plain') {
-                alert('Only PDF and TXT files are allowed.');
+            const allowedTypes = [
+                'application/pdf',
+                'text/plain',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ];
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedTypes.includes(file.type) && extension !== 'docx') {
+                alert('Only PDF, DOCX, and TXT files are allowed.');
                 cvInput.value = '';
                 return;
             }
