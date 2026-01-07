@@ -79,16 +79,55 @@
                     <input type="url" id="portfolioInput" class="form-control" placeholder="https://myportfolio.com">
                 </div>
 
-                <!-- CV Upload Simulation -->
+                <!-- CV Upload Section with Parsing -->
                 <div class="form-group">
-                    <label>CV / Resume (PDF)</label>
-                    <div class="file-upload" id="dropZone">
+                    <label>CV / Resume (PDF / TXT)</label>
+                    <div class="file-upload" id="dropZone" style="position: relative;">
                         <ion-icon name="cloud-upload-outline"
                             style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></ion-icon>
                         <p id="fileLabel">Click to upload or drag and drop</p>
-                        <input type="file" id="cvInput" accept=".pdf" style="display: none;">
-                        <input type="hidden" id="cvData"> <!-- storing base64 for demo -->
+                        <input type="file" id="cvInput" accept=".pdf,.txt" style="display: none;">
+                        <input type="hidden" id="cvData">
                     </div>
+                    <button type="button" id="parseCvBtn" class="btn btn-outline"
+                        style="width: 100%; margin-top: 0.5rem; display: none;">
+                        <ion-icon name="analytics-outline"></ion-icon> Extract Info from CV
+                    </button>
+                    <div id="parseLoading" style="display: none; text-align: center; margin-top: 0.5rem;">
+                        <small style="color: var(--accent)">Processing CV... Please wait.</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phoneInput" class="form-control" placeholder="+1-234-567-8900">
+                </div>
+
+                <div class="form-group">
+                    <label>Experience (Years)</label>
+                    <input type="number" id="experienceInput" class="form-control" placeholder="5" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Education</label>
+                    <input type="text" id="educationInput" class="form-control" placeholder="Highest degree">
+                </div>
+
+                <div class="form-group">
+                    <label>Skills (comma separated)</label>
+                    <textarea id="skillsInput" class="form-control" placeholder="Flutter, .NET, React, SQL"
+                        rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Certifications (comma separated)</label>
+                    <textarea id="certificationsInput" class="form-control"
+                        placeholder="AWS Certified, Microsoft Certified" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Languages (comma separated)</label>
+                    <input type="text" id="languagesInput" class="form-control" placeholder="English, Arabic, French">
                 </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">

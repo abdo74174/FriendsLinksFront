@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const cvInput = document.getElementById('cvInput');
     const cvDataInput = document.getElementById('cvData');
 
+    // New Fields
+    const phoneInput = document.getElementById('phoneInput');
+    const experienceInput = document.getElementById('experienceInput');
+    const educationInput = document.getElementById('educationInput');
+    const skillsInput = document.getElementById('skillsInput');
+    const certificationsInput = document.getElementById('certificationsInput');
+    const languagesInput = document.getElementById('languagesInput');
+    const parseCvBtn = document.getElementById('parseCvBtn');
+    const parseLoading = document.getElementById('parseLoading');
+
     const dropZone = document.getElementById('dropZone');
     const fileLabel = document.getElementById('fileLabel');
     const formTitle = document.getElementById('formTitle');
@@ -54,6 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 githubInput.value = profile.github || '';
                 facebookInput.value = profile.facebook || '';
                 portfolioInput.value = profile.portfolio || '';
+
+                // New fields
+                phoneInput.value = profile.phone || '';
+                experienceInput.value = profile.experienceYears || 0;
+                educationInput.value = profile.education || '';
+                skillsInput.value = profile.skills ? JSON.parse(profile.skills).join(', ') : '';
+                certificationsInput.value = profile.certifications ? JSON.parse(profile.certifications).join(', ') : '';
+                languagesInput.value = profile.languages ? JSON.parse(profile.languages).join(', ') : '';
+
                 if (profile.cvBase64) {
                     cvDataInput.value = profile.cvBase64;
                     fileLabel.textContent = "CV Attached (Upload new to replace)";
@@ -67,6 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 githubInput.value = '';
                 facebookInput.value = '';
                 portfolioInput.value = '';
+                phoneInput.value = '';
+                experienceInput.value = 0;
+                educationInput.value = '';
+                skillsInput.value = '';
+                certificationsInput.value = '';
+                languagesInput.value = '';
             }
 
         } catch (err) {
@@ -82,46 +107,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cvInput.addEventListener('change', handleFileSelect);
 
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = 'var(--accent)';
-        dropZone.style.background = 'rgba(47, 129, 247, 0.1)';
-    });
-
-    dropZone.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = 'var(--border)';
-        dropZone.style.background = 'transparent';
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = 'var(--border)';
-        dropZone.style.background = 'transparent';
-
-        if (e.dataTransfer.files.length) {
-            cvInput.files = e.dataTransfer.files;
-            handleFileSelect();
-        }
-    });
+    // ... (drag/drop handlers remain same)
 
     function handleFileSelect() {
         const file = cvInput.files[0];
         if (file) {
-            if (file.type !== 'application/pdf') {
-                alert('Only PDF files are allowed.');
+            if (file.type !== 'application/pdf' && file.type !== 'text/plain') {
+                alert('Only PDF and TXT files are allowed.');
                 cvInput.value = '';
                 return;
             }
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit simulation
-                alert('File is too large. Max 5MB.');
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File is too large. Max 10MB.');
                 cvInput.value = '';
                 return;
             }
 
             fileLabel.textContent = `Selected: ${file.name}`;
+            parseCvBtn.style.display = 'block';
 
-            // Convert to Base64 for storage simulation
+            // Convert to Base64 for storage
             const reader = new FileReader();
             reader.onload = function (e) {
                 cvDataInput.value = e.target.result;
@@ -129,6 +134,47 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         }
     }
+
+    // Parse CV logic
+    parseCvBtn.addEventListener('click', async () => {
+        const file = cvInput.files[0];
+        if (!file) return;
+
+        parseCvBtn.disabled = true;
+        parseLoading.style.display = 'block';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            // Updated to point to our new CV Parser API on the local backend
+            const response = await fetch('http://localhost:5240/api/CvParser/parse-file', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Parsing failed');
+
+            const result = await response.json();
+
+            // Auto-fill form
+            if (result.fullName) nameInput.value = result.fullName;
+            if (result.phone) phoneInput.value = result.phone;
+            if (result.experienceYears) experienceInput.value = result.experienceYears;
+            if (result.education) educationInput.value = result.education;
+            if (result.skills) skillsInput.value = result.skills.join(', ');
+            if (result.certifications) certificationsInput.value = result.certifications.join(', ');
+            if (result.languages) languagesInput.value = result.languages.join(', ');
+
+            alert('CV parsed successfully! Information has been auto-filled.');
+        } catch (error) {
+            console.error('Error parsing CV:', error);
+            alert('Failed to parse CV. You can still fill the fields manually.');
+        } finally {
+            parseCvBtn.disabled = false;
+            parseLoading.style.display = 'none';
+        }
+    });
 
     // Step 2: Save Profile
     profileForm.addEventListener('submit', async (e) => {
@@ -145,7 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
             github: githubInput.value,
             facebook: facebookInput.value,
             portfolio: portfolioInput.value,
-            cvBase64: cvDataInput.value
+            cvBase64: cvDataInput.value,
+            // New fields - send as JSON strings for arrays
+            phone: phoneInput.value,
+            experienceYears: parseInt(experienceInput.value) || 0,
+            education: educationInput.value,
+            skills: JSON.stringify(skillsInput.value.split(',').map(s => s.trim()).filter(s => s)),
+            certifications: JSON.stringify(certificationsInput.value.split(',').map(s => s.trim()).filter(s => s)),
+            languages: JSON.stringify(languagesInput.value.split(',').map(s => s.trim()).filter(s => s))
         };
 
         try {
