@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const grid = document.getElementById('grid');
     const searchInput = document.getElementById('searchInput');
+    const skillFilter = document.getElementById('skillFilter');
+    const educationFilter = document.getElementById('educationFilter');
+    const languageFilter = document.getElementById('languageFilter');
+    const experienceFilter = document.getElementById('experienceFilter');
     const noResults = document.getElementById('noResults');
 
     let allProfiles = [];
@@ -23,16 +27,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         profiles.forEach(profile => {
             const card = document.createElement('div');
             card.className = 'profile-card fade-in';
-            // Stagger animation
-            // card.style.animationDelay = `${index * 0.1}s`;
+
+            // Parse JSON fields safely
+            const skills = profile.skills ? JSON.parse(profile.skills) : [];
+            const experience = profile.experienceYears || 0;
 
             card.innerHTML = `
                 <div class="avatar">${profile.name.charAt(0).toUpperCase()}</div>
                 <div class="profile-name">${profile.name}</div>
-                <!-- Email hidden for privacy -->
-                <div class="profile-role" style="display:none;">${profile.email}</div>
+                <div class="profile-role" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    ${profile.education || 'Professional'} • ${experience}y Exp
+                </div>
                 
-                <div class="social-links">
+                <div class="social-links" style="margin-bottom: 1rem;">
                     <a href="${profile.linkedin}" target="_blank" class="social-icon" title="LinkedIn">
                         <ion-icon name="logo-linkedin"></ion-icon>
                     </a>
@@ -43,17 +50,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <a href="${profile.facebook}" target="_blank" class="social-icon" title="Facebook">
                         <ion-icon name="logo-facebook"></ion-icon>
                     </a>` : ''}
-                    ${profile.portfolio ? `
-                    <a href="${profile.portfolio}" target="_blank" class="social-icon" title="Portfolio">
-                        <ion-icon name="globe-outline"></ion-icon>
-                    </a>` : ''}
                 </div>
 
-                <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
-                    <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="flex: 1;">
+                <div class="skill-tags" style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem; max-height: 50px; overflow: hidden;">
+                    ${skills.slice(0, 3).map(skill => `<span style="background: var(--accent); color: white; border-radius: 10px; padding: 2px 8px; font-size: 0.65rem;">${skill}</span>`).join('')}
+                    ${skills.length > 3 ? `<span style="background: var(--border); color: var(--text-secondary); border-radius: 10px; padding: 2px 8px; font-size: 0.65rem;">+${skills.length - 3}</span>` : ''}
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; margin-top: auto; width: 100%;">
+                    <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="flex: 1; padding: 0.5rem;">
                         View Profile
                     </a>
-                    <button class="btn btn-outline share-btn" data-email="${profile.email}" title="Share Profile" style="padding: 0 1rem;">
+                    <button class="btn btn-outline share-btn" data-email="${profile.email}" title="Share Profile" style="padding: 0.5rem;">
                         <ion-icon name="share-social-outline"></ion-icon>
                     </button>
                 </div>
@@ -62,13 +70,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allProfiles.filter(p =>
-            p.name.toLowerCase().includes(term) ||
-            p.email.toLowerCase().includes(term)
-        );
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const skillTerm = skillFilter.value.toLowerCase();
+        const educationTerm = educationFilter.value.toLowerCase();
+        const languageTerm = languageFilter.value.toLowerCase();
+        const minExp = parseInt(experienceFilter.value) || 0;
+
+        const filtered = allProfiles.filter(p => {
+            // Basic search
+            const matchName = p.name.toLowerCase().includes(searchTerm);
+            const matchEmail = p.email.toLowerCase().includes(searchTerm);
+
+            // Skill filter
+            const skills = p.skills ? JSON.parse(p.skills).map(s => s.toLowerCase()) : [];
+            const matchSkills = skillTerm === '' || skills.some(s => s.includes(skillTerm));
+
+            // Education filter
+            const matchEdu = p.education ? p.education.toLowerCase().includes(educationTerm) : educationTerm === '';
+
+            // Language filter
+            const languages = p.languages ? JSON.parse(p.languages).map(l => l.toLowerCase()) : [];
+            const matchLang = languageTerm === '' || languages.some(l => l.includes(languageTerm));
+
+            // Experience filter
+            const matchExp = p.experienceYears >= minExp;
+
+            return (matchName || matchEmail) && matchSkills && matchEdu && matchLang && matchExp;
+        });
+
         renderProfiles(filtered);
+    }
+
+    [searchInput, skillFilter, educationFilter, languageFilter, experienceFilter].forEach(el => {
+        el.addEventListener('input', applyFilters);
     });
 
 
