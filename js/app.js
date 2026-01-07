@@ -49,9 +49,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </a>` : ''}
                 </div>
 
-                <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;">
-                    View Profile
-                </a>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                    <a href="profile.html?email=${encodeURIComponent(profile.email)}" class="btn btn-primary" style="flex: 1;">
+                        View Profile
+                    </a>
+                    <button class="btn btn-outline share-btn" data-email="${profile.email}" title="Share Profile" style="padding: 0 1rem;">
+                        <ion-icon name="share-social-outline"></ion-icon>
+                    </button>
+                </div>
             `;
             grid.appendChild(card);
         });
@@ -65,6 +70,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
         renderProfiles(filtered);
     });
+
+
+
+
+    // Share Button Logic
+    grid.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.share-btn');
+        if (!btn) return;
+
+        const email = btn.dataset.email;
+        if (!email) return;
+
+        const url = new URL(`profile.html?email=${encodeURIComponent(email)}`, window.location.href).href;
+
+        try {
+            await navigator.clipboard.writeText(url);
+            showToast('Profile link copied!');
+        } catch (err) {
+            console.error('Failed to copy class:', err);
+            // Fallback
+            prompt('Copy this link:', url);
+        }
+    });
+
+    function showToast(message) {
+        // Remove existing toast
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<ion-icon name="checkmark-circle"></ion-icon> ${message}`;
+        document.body.appendChild(toast);
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 
     await loadProfiles();
 });
