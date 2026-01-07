@@ -160,7 +160,8 @@ header .container.nav-flex {
     text-align: center;
     padding: 6rem 0 4rem;
     position: relative;
-    overflow: hidden;
+    z-index: 50;
+    /* Ensure hero and its children (filters) are above the grid */
 }
 
 /* Abstract Background Blobs */
@@ -225,7 +226,8 @@ header .container.nav-flex {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    z-index: 10;
+    z-index: 60;
+    /* Higher than hero background if needed */
 }
 
 .search-bar-modern {
